@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain-Based Blue Carbon Registry</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Coastal Calm - a serene palette of off-whites, warm grays, and a primary teal-green accent. -->
+    <!-- Application Structure Plan: A logical, narrative-driven single-page design. Sections flow from problem to solution to impact. The core flow is: 1) The Challenge (Problem Statement), 2) The Solution (High-Level Architecture), 3) The Workflow (Detailed Process Breakdown), and 4) The Impact (Benefits & Metrics). This structure was chosen to build a persuasive case, starting with the "why," detailing the "how," and concluding with the "results," making a complex technical project clear for any audience. Key interactions include tabbed content for core components and filterable charts for impact visualization. -->
+    <!-- Visualization & Content Choices: 1. The Challenge (Problem Section): Goal: Context. Viz: Text with a simple doughnut chart. Interaction: None, provides a quick high-level view. Justification: Sets the stage and quickly communicates the scale of the challenge. Library: Chart.js. 2. The Solution (Architecture Section): Goal: Explain Components. Viz: Tabbed content/panes. Interaction: Clickable tabs to reveal text about each component (Blockchain, Smart Contracts, etc.). Justification: Breaks down complex architecture without cluttering the page. Method: Vanilla JS + Tailwind. 3. The Workflow (Process Section): Goal: Guide. Viz: HTML/CSS timeline. Interaction: Clickable steps to reveal detailed text. Justification: Demystifies the user journey and data flow on the platform. Method: Vanilla JS + Tailwind. 4. The Impact (Benefits Section): Goal: Prove value. Viz: Multiple KPI cards, a bar chart, and a line chart. Interaction: A dropdown to filter the charts and update KPIs. Justification: Provides concrete evidence of the project's value and allows users to explore specific data points. Libraries: Chart.js. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .nav-link {
+            transition: color 0.3s ease, border-bottom-color 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0d9488;
+            border-bottom-color: #0d9488;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 450px;
+        }
+        .tab-button {
+            border-radius: 9999px;
+            padding: 0.75rem 1.5rem;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #0d9488;
+            color: white;
+            box-shadow: 0 4px 6px rgba(13, 148, 136, 0.3);
+        }
+        .process-step {
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .process-step:hover {
+            transform: scale(1.05);
+            background-color: #f0fdfa;
+        }
+        .process-step.active {
+            box-shadow: 0 0 10px rgba(13, 148, 136, 0.5);
+            border-color: #0d9488;
+        }
+        .kpi-card {
+             background-color: white;
+             border-radius: 0.75rem;
+             padding: 1.5rem;
+             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+             text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-700">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-bold text-teal-700">The Blue Carbon Project</h1>
+            <div class="hidden md:flex space-x-8">
+                <a href="#challenge" class="nav-link pb-1">The Challenge</a>
+                <a href="#solution" class="nav-link pb-1">Our Solution</a>
+                <a href="#process" class="nav-link pb-1">The Workflow</a>
+                <a href="#impact" class="nav-link pb-1">Our Impact</a>
+            </div>
+             <button id="mobile-menu-button" class="md:hidden text-slate-600 focus:outline-none">
+                <span class="text-3xl">☰</span>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+             <a href="#challenge" class="block py-2 text-center nav-link">The Challenge</a>
+             <a href="#solution" class="block py-2 text-center nav-link">Our Solution</a>
+             <a href="#process" class="block py-2 text-center nav-link">The Workflow</a>
+             <a href="#impact" class="block py-2 text-center nav-link">Our Impact</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8 md:py-16">
+
+        <section id="challenge" class="scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">India's Blue Carbon Challenge</h2>
+                <p class="max-w-4xl mx-auto text-lg text-slate-600">Coastal ecosystems like mangroves are powerful tools in our climate strategy. They can sequester carbon at a rate far exceeding terrestrial forests, but their potential is untapped due to a lack of a transparent and verifiable Monitoring, Reporting, and Verification (MRV) system. This section explains the problem our platform addresses.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-8 items-center bg-white p-6 md:p-12 rounded-lg shadow-md">
+                <div class="flex flex-col h-full">
+                    <h3 class="text-2xl font-semibold mb-4 text-teal-700">The Problem: Lack of Trust & Transparency</h3>
+                    <p class="mb-4 text-slate-600">Traditional MRV systems are often centralized, manual, and prone to error or even fraud. Data on plantation and restoration efforts can be difficult to verify, leading to a lack of confidence from investors and corporations who want to purchase carbon credits.</p>
+                    <p class="text-slate-600">Without a reliable system, the immense climate and economic potential of blue carbon projects remains locked away. We need a solution that ensures every single piece of data—from a newly planted sapling to a successful restoration site—is recorded immutably and verified automatically.</p>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-center mb-4 text-teal-700">The Untapped Potential</h3>
+                    <div class="chart-container">
+                        <canvas id="sequestrationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="mt-20 md:mt-32 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">Our Solution: A Decentralized Ledger</h2>
+                <p class="max-w-4xl mx-auto text-lg text-slate-600">We are building a **Blockchain-Based Blue Carbon Registry** to create a single source of truth. The system eliminates intermediaries, automates verification, and ensures every transaction is transparent and permanent. Select a component below to understand our architecture.</p>
+            </div>
+            <div class="bg-white p-6 md:p-12 rounded-lg shadow-md">
+                <div class="flex justify-center flex-wrap gap-4 mb-8">
+                    <button class="tab-button active" data-tab="blockchain">The Blockchain</button>
+                    <button class="tab-button" data-tab="smartcontracts">Smart Contracts</button>
+                    <button class="tab-button" data-tab="data">Data Integration</button>
+                    <button class="tab-button" data-tab="onboarding">Onboarding</button>
+                </div>
+                <div id="tab-content-container">
+                    <div id="tab-blockchain" class="tab-content">
+                        <h3 class="text-2xl font-semibold text-teal-700 mb-4">The Blockchain Ledger</h3>
+                        <p class="text-slate-600">This is the core of our system, an immutable digital ledger shared by all participants. It stores and validates all project data, from initial registration to final credit issuance. Its decentralized nature means no single entity has control over the data, making it tamper-proof and verifiable by anyone. The ledger ensures a permanent, transparent record of all blue carbon activities.</p>
+                    </div>
+                    <div id="tab-smartcontracts" class="tab-content hidden">
+                        <h3 class="text-2xl font-semibold text-teal-700 mb-4">Automated Smart Contracts</h3>
+                        <p class="text-slate-600">Smart contracts are self-executing programs that run on the blockchain. They automate the entire process of carbon credit tokenization. When a project meets its pre-defined verification criteria (e.g., reaching a certain biomass or survival rate), the smart contract automatically mints new tokens, eliminating manual errors and accelerating credit issuance.</p>
+                    </div>
+                    <div id="tab-data" class="tab-content hidden">
+                        <h3 class="text-2xl font-semibold text-teal-700 mb-4">Verifiable Data Integration</h3>
+                        <p class="text-slate-600">Data integrity is our top priority. Our platform integrates data from multiple sources: geo-tagged photos and field reports from a mobile app, and high-resolution imagery from drones. Instead of storing massive files, we store their unique cryptographic hashes on the blockchain, providing a permanent and verifiable link to the original data without the need for large storage.</p>
+                    </div>
+                    <div id="tab-onboarding" class="tab-content hidden">
+                        <h3 class="text-2xl font-semibold text-teal-700 mb-4">Inclusive Onboarding Process</h3>
+                        <p class="text-slate-600">Our system is designed to be accessible to everyone. We will onboard NGOs, local communities, and coastal panchayats through a simplified process. Once registered, they gain access to the mobile app for easy data submission and a dashboard to track their project's progress and the carbon credits they've earned.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="process" class="mt-20 md:mt-32 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">The Workflow: From Sapling to Credit</h2>
+                <p class="max-w-4xl mx-auto text-lg text-slate-600">This step-by-step guide illustrates the journey of a blue carbon project on our platform. The process is designed to be seamless and verifiable. Click on each step to see how data flows through the system.</p>
+            </div>
+            <div class="bg-white p-6 md:p-12 rounded-lg shadow-md">
+                <div class="grid lg:grid-cols-4 gap-6">
+                    <div id="step-1" class="process-step border-2 border-slate-200 rounded-lg p-6 text-center shadow-sm" data-process="1">
+                        <span class="text-4xl block mb-2">🌱</span>
+                        <h4 class="font-semibold text-lg">1. Project Registration</h4>
+                    </div>
+                    <div id="step-2" class="process-step border-2 border-slate-200 rounded-lg p-6 text-center shadow-sm" data-process="2">
+                        <span class="text-4xl block mb-2">📱</span>
+                        <h4 class="font-semibold text-lg">2. Field Data Upload</h4>
+                    </div>
+                    <div id="step-3" class="process-step border-2 border-slate-200 rounded-lg p-6 text-center shadow-sm" data-process="3">
+                        <span class="text-4xl block mb-2">🔎</span>
+                        <h4 class="font-semibold text-lg">3. Automated Verification</h4>
+                    </div>
+                    <div id="step-4" class="process-step border-2 border-slate-200 rounded-lg p-6 text-center shadow-sm" data-process="4">
+                        <span class="text-4xl block mb-2">💎</span>
+                        <h4 class="font-semibold text-lg">4. Credit Issuance</h4>
+                    </div>
+                </div>
+                <div id="process-info-container" class="mt-8 pt-6 border-t border-slate-200 min-h-[120px]">
+                    <p class="text-center text-slate-500 text-lg">Select a step above to learn more.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="mt-20 md:mt-32 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">Creating Real-World Impact for Everyone</h2>
+                <p class="max-w-4xl mx-auto text-lg text-slate-600">Our solution is more than just a registry; it's a mechanism for positive change. By building trust and efficiency, we help everyone from coastal communities to global corporations. This dashboard provides a glimpse into the tangible outcomes.</p>
+            </div>
+            <div class="bg-white p-6 md:p-12 rounded-lg shadow-md">
+                <h3 class="text-2xl font-semibold mb-6 text-teal-700">Regional Performance Dashboard</h3>
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+                    <p class="text-lg text-slate-600 mb-4 sm:mb-0">Filter data to see regional impact:</p>
+                    <select id="impact-filter" class="w-full sm:w-auto border border-slate-300 rounded-md px-3 py-2">
+                        <option value="all">All Regions</option>
+                        <option value="gujarat">Gujarat</option>
+                        <option value="andhra">Andhra Pradesh</option>
+                        <option value="west-bengal">West Bengal</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8 text-center">
+                    <div class="kpi-card">
+                        <h4 class="text-slate-500 font-medium">Projects Onboarded</h4>
+                        <p id="kpi-projects" class="text-3xl md:text-4xl font-bold text-teal-600">35</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4 class="text-slate-500 font-medium">Hectares Restored</h4>
+                        <p id="kpi-hectares" class="text-3xl md:text-4xl font-bold text-teal-600">12,500</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4 class="text-slate-500 font-medium">CO₂ Sequestered</h4>
+                        <p id="kpi-co2" class="text-3xl md:text-4xl font-bold text-teal-600">2.1M tCO₂e</p>
+                    </div>
+                    <div class="kpi-card">
+                        <h4 class="text-slate-500 font-medium">Credits Traded</h4>
+                        <p id="kpi-credits" class="text-3xl md:text-4xl font-bold text-teal-600">1.8M</p>
+                    </div>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-8 mt-12">
+                     <div class="flex flex-col">
+                        <h3 class="text-xl font-semibold text-center mb-4 text-teal-700">Credits by Ecosystem Type</h3>
+                        <div class="chart-container">
+                            <canvas id="ecosystemChart"></canvas>
+                        </div>
+                    </div>
+                     <div class="flex flex-col">
+                        <h3 class="text-xl font-semibold text-center mb-4 text-teal-700">Restoration Progress Over Time</h3>
+                        <div class="chart-container">
+                            <canvas id="progressChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-slate-800 text-slate-300 mt-20 md:mt-32">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 Blue Carbon Ledger. An initiative to combat climate change through verifiable restoration. A conceptual design for SIH Problem #25038.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const state = {
+                activeTab: 'blockchain',
+                activeProcess: null,
+                impactFilter: 'all'
+            };
+
+            const data = {
+                tabs: {
+                    blockchain: "This is the core of our system, an immutable digital ledger shared by all participants. It stores and validates all project data, from initial registration to final credit issuance. Its decentralized nature means no single entity has control over the data, making it tamper-proof and verifiable by anyone. The ledger ensures a permanent, transparent record of all blue carbon activities.",
+                    smartcontracts: "Smart contracts are self-executing programs that run on the blockchain. They automate the entire process of carbon credit tokenization. When a project meets its pre-defined verification criteria (e.g., reaching a certain biomass or survival rate), the smart contract automatically mints new tokens, eliminating manual errors and accelerating credit issuance.",
+                    data: "Data integrity is our top priority. Our platform integrates data from multiple sources: geo-tagged photos and field reports from a mobile app, and high-resolution imagery from drones. Instead of storing massive files, we store their unique cryptographic hashes on the blockchain, providing a permanent and verifiable link to the original data without the need for large storage.",
+                    onboarding: "Our system is designed to be accessible to everyone. We will onboard NGOs, local communities, and coastal panchayats through a simplified process. Once registered, they gain access to the mobile app for easy data submission and a dashboard to track their project's progress and the carbon credits they've earned."
+                },
+                process: {
+                    1: {
+                        title: "1. Project Registration",
+                        text: "An NGO or coastal panchayat registers a new blue carbon project. Details like project location, scope, species to be planted, and expected sequestration rates are submitted and recorded on the blockchain as a new project entry, making it visible to all."
+                    },
+                    2: {
+                        title: "2. Field Data Upload",
+                        text: "Using a dedicated mobile application, on-ground teams upload real-time field data. This includes geolocated photos and videos of planted saplings, health status reports, and manual counts. Drone imagery hashes are also submitted here for automated cross-verification."
+                    },
+                    3: {
+                        title: "3. Automated Verification",
+                        text: "The system's smart contracts automatically process the uploaded data. It compares the mobile reports with the drone imagery and pre-defined project goals. This automated process minimizes human error and reduces the time needed for traditional manual verification."
+                    },
+                    4: {
+                        title: "4. Carbon Credit Issuance",
+                        text: "Upon successful verification, the system's smart contract automatically mints a new, unique carbon credit token. This token is an immutable asset issued directly to the project owner's digital wallet, ready to be sold on the carbon market."
+                    }
+                },
+                impact: {
+                    all: {
+                        kpis: { projects: '35', hectares: '12,500', co2: '2.1M tCO₂e', credits: '1.8M' },
+                        ecosystem: { labels: ['Mangroves', 'Tidal Marshes', 'Seagrass'], data: [1.2, 0.5, 0.4] },
+                        progress: { labels: ['2023', '2024', '2025'], data: [4000, 8500, 12500] }
+                    },
+                    gujarat: {
+                        kpis: { projects: '10', hectares: '4,000', co2: '800K tCO₂e', credits: '720K' },
+                        ecosystem: { labels: ['Mangroves'], data: [0.8] },
+                        progress: { labels: ['2023', '2024', '2025'], data: [1500, 3000, 4000] }
+                    },
+                    andhra: {
+                        kpis: { projects: '8', hectares: '3,500', co2: '650K tCO₂e', credits: '600K' },
+                        ecosystem: { labels: ['Mangroves', 'Seagrass'], data: [0.4, 0.25] },
+                        progress: { labels: ['2023', '2024', '2025'], data: [1000, 2000, 3500] }
+                    },
+                    'west-bengal': {
+                        kpis: { projects: '12', hectares: '5,000', co2: '900K tCO₂e', credits: '800K' },
+                        ecosystem: { labels: ['Mangroves', 'Tidal Marshes'], data: [0.7, 0.2] },
+                        progress: { labels: ['2023', '2024', '2025'], data: [1500, 3500, 5000] }
+                    }
+                }
+            };
+
+            const sequestrationCtx = document.getElementById('sequestrationChart').getContext('2d');
+            const ecosystemCtx = document.getElementById('ecosystemChart').getContext('2d');
+            const progressCtx = document.getElementById('progressChart').getContext('2d');
+            let ecosystemChart, progressChart;
+
+            const sequestrationChart = new Chart(sequestrationCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Blue Carbon', 'Terrestrial Forests'],
+                    datasets: [{
+                        data: [75, 25],
+                        backgroundColor: ['#0d9488', '#5eead4'],
+                        borderColor: '#f8fafc',
+                        borderWidth: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: Up to 10x more efficient at sequestering carbon per hectare.`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            function createEcosystemChart(filter) {
+                const chartData = data.impact[filter].ecosystem;
+                if (ecosystemChart) { ecosystemChart.destroy(); }
+                ecosystemChart = new Chart(ecosystemCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: chartData.labels,
+                        datasets: [{
+                            label: 'Credits Issued (Millions of tCO₂e)',
+                            data: chartData.data,
+                            backgroundColor: '#0d9488',
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            function createProgressChart(filter) {
+                const chartData = data.impact[filter].progress;
+                if (progressChart) { progressChart.destroy(); }
+                progressChart = new Chart(progressCtx, {
+                    type: 'line',
+                    data: {
+                        labels: chartData.labels,
+                        datasets: [{
+                            label: 'Hectares Restored',
+                            data: chartData.data,
+                            borderColor: '#0d9488',
+                            backgroundColor: '#0d9488',
+                            fill: false,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { beginAtZero: true } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            function updateKPIs(filter) {
+                const kpiData = data.impact[filter].kpis;
+                document.getElementById('kpi-projects').textContent = kpiData.projects;
+                document.getElementById('kpi-hectares').textContent = kpiData.hectares.toLocaleString();
+                document.getElementById('kpi-co2').textContent = kpiData.co2;
+                document.getElementById('kpi-credits').textContent = kpiData.credits;
+            }
+
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+                    document.getElementById(`tab-${button.dataset.tab}`).classList.remove('hidden');
+                });
+            });
+
+            document.querySelectorAll('.process-step').forEach(step => {
+                step.addEventListener('click', () => {
+                    document.querySelectorAll('.process-step').forEach(s => s.classList.remove('active'));
+                    step.classList.add('active');
+                    const info = data.process[step.dataset.process];
+                    document.getElementById('process-info-container').innerHTML = `
+                        <div>
+                            <h4 class="text-xl font-bold text-teal-700 mb-2">${info.title}</h4>
+                            <p class="text-slate-600">${info.text}</p>
+                        </div>
+                    `;
+                });
+            });
+
+            document.getElementById('impact-filter').addEventListener('change', (e) => {
+                state.impactFilter = e.target.value;
+                createEcosystemChart(state.impactFilter);
+                createProgressChart(state.impactFilter);
+                updateKPIs(state.impactFilter);
+            });
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                     mobileMenu.classList.add('hidden');
+                });
+            });
+            
+            function onScroll() {
+                const scrollPos = window.scrollY + 150;
+                navLinks.forEach(link => {
+                    const section = document.querySelector(link.getAttribute('href'));
+                    if (section.offsetTop <= scrollPos && (section.offsetTop + section.offsetHeight) > scrollPos) {
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+            window.addEventListener('scroll', onScroll);
+
+            createEcosystemChart('all');
+            createProgressChart('all');
+        });
+    </script>
+</body>
+</html>
